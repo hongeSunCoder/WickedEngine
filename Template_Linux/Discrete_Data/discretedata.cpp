@@ -141,10 +141,10 @@ void DiscreteData::SetCurrentContext(DiscreteDataContext *ctx)
 #endif
 }
 
-DiscreteDataContext *DiscreteData::CreateContext()
+DiscreteDataContext *DiscreteData::CreateContext(ImFontAtlas *shared_font_atlas)
 {
     DiscreteDataContext *prev_ctx = GetCurrentContext();
-    DiscreteDataContext *ctx = IM_NEW(DiscreteDataContext)();
+    DiscreteDataContext *ctx = IM_NEW(DiscreteDataContext)(shared_font_atlas);
     SetCurrentContext(ctx);
     Initialize();
     if (prev_ctx != NULL)

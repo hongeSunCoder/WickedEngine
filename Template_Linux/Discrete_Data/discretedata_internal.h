@@ -591,7 +591,12 @@ struct ImGuiContextHook
 struct DiscreteDataContext
 {
     bool Initialized;
+    bool FontAtlasOwnedByContext; // IO.Fonts-> is owned by the ImGuiContext and will be destructed along with it.
     ImGuiIO IO;
+    ImFont *Font;       // (Shortcut) == FontStack.empty() ? IO.Font : FontStack.back()
+    float FontSize;     // (Shortcut) == FontBaseSize * g.CurrentWindow->FontWindowScale == window->FontSize(). Text height for current window.
+    float FontBaseSize; // (Shortcut) == IO.FontGlobalScale * Font->Scale * Font->FontSize. Base text height.
+
     DiscreteDrawListSharedData DrawListSharedData;
 
     // Windows state
@@ -609,11 +614,20 @@ struct DiscreteDataContext
     int FrameCountEnded;
     int FrameCountRendered;
 
-    DiscreteDataContext()
+    DiscreteDataContext(ImFontAtlas *shared_font_atlas)
     {
         Initialized = false;
+        FontAtlasOwnedByContext = shared_font_atlas ? false : true;
+        Font = NULL;
+        FontSize = FontBaseSize = 0.0f;
+        IO.Fonts = shared_font_atlas ? shared_font_atlas : IM_NEW(ImFontAtlas)();
+        Time = 0.0f;
         FrameCount = 0;
         FrameCountEnded = FrameCountRendered = -1;
+        // WithinFrameScope = WithinFrameScopeWithImplicitWindow = WithinEndChild = false;
+        // GcCompactAll = false;
+        // TestEngineHookItems = false;
+        // TestEngine = NULL;
     }
 
     // Viewports
@@ -848,5 +862,28 @@ namespace DiscreteData
     DISCRETE_API void SetWindowViewport(ImGuiWindow *window, ImGuiViewportP *viewport);
 
 };
+
+//-----------------------------------------------------------------------------
+// [SECTION] ImFontAtlas internal API
+//-----------------------------------------------------------------------------
+
+// This structure is likely to evolve as we add support for incremental atlas updates
+struct ImFontBuilderIO
+{
+    bool (*FontBuilder_Build)(ImFontAtlas *atlas);
+};
+
+// Helper for font builder
+#ifdef IMGUI_ENABLE_STB_TRUETYPE
+DISCRETE_API const ImFontBuilderIO *ImFontAtlasGetBuilderForStbTruetype();
+#endif
+DISCRETE_API void ImFontAtlasBuildInit(ImFontAtlas *atlas);
+DISCRETE_API void ImFontAtlasBuildSetupFont(ImFontAtlas *atlas, ImFont *font, ImFontConfig *font_config, float ascent, float descent);
+DISCRETE_API void ImFontAtlasBuildPackCustomRects(ImFontAtlas *atlas, void *stbrp_context_opaque);
+DISCRETE_API void ImFontAtlasBuildFinish(ImFontAtlas *atlas);
+DISCRETE_API void ImFontAtlasBuildRender8bppRectFromString(ImFontAtlas *atlas, int x, int y, int w, int h, const char *in_str, char in_marker_char, unsigned char in_marker_pixel_value);
+DISCRETE_API void ImFontAtlasBuildRender32bppRectFromString(ImFontAtlas *atlas, int x, int y, int w, int h, const char *in_str, char in_marker_char, unsigned int in_marker_pixel_value);
+DISCRETE_API void ImFontAtlasBuildMultiplyCalcLookupTable(unsigned char out_table[256], float in_multiply_factor);
+DISCRETE_API void ImFontAtlasBuildMultiplyRectAlpha8(const unsigned char table[256], unsigned char *pixels, int x, int y, int w, int h, int stride);
 
 #endif // #ifndef IMGUI_DISABLE
