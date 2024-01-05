@@ -2,8 +2,6 @@
 
 #include <SDL2/SDL.h>
 
-#include "Discrete_Data/imgui_impl_sdl.h"
-
 int sdl_loop(Example_DiscreteData &application)
 {
     SDL_Event event;
@@ -36,6 +34,8 @@ int sdl_loop(Example_DiscreteData &application)
             default:
                 break;
             }
+
+            wi::input::sdlinput::ProcessEvent(event);
         }
     }
 
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     sdl2::window_ptr_t window = sdl2::make_window(
         "Template",
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-        2560, 1440,
+        1000, 1000,
         SDL_WINDOW_SHOWN | SDL_WINDOW_VULKAN | SDL_WINDOW_ALLOW_HIGHDPI);
 
     SDL_Event event;

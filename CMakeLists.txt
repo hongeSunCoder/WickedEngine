@@ -4,7 +4,7 @@ set(WICKED_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 option(WICKED_DYNAMIC_LIBRARY "Build WickedEngine as a dynamic library" OFF)
 
-option(WICKED_EDITOR "Build WickedEngine editor" OFF)
+option(WICKED_EDITOR "Build WickedEngine editor" ON)
 option(WICKED_TESTS "Build WickedEngine tests" OFF)
 option(WICKED_IMGUI_EXAMPLE "Build WickedEngine imgui example" ON)
 option(WICKED_LINUX_TEMPLATE "Build WickedEngine Linux template" ON)

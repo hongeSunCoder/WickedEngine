@@ -13,15 +13,10 @@ endif()
 
 set (SOURCE_FILES
     main.cpp
-    stdafx.h  
     Example_DiscreteData.h 
     Example_DiscreteData.cpp 
-    Discrete_Data/discretedata_draw.cpp
-    Discrete_Data/discretedata_internal.h
-    Discrete_Data/discretedata.cpp
-    Discrete_Data/discretedata.h
-    Discrete_Data/imgui_impl_sdl.h
-    Discrete_Data/imgui_impl_sdl.cpp
+    Discrete_Data/discrete.h
+    Discrete_Data/discrete.cpp
 )
 
 set(LIB_DXCOMPILER "libdxcompiler.so")
