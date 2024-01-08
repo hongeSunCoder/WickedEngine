@@ -3,13 +3,14 @@
 using namespace wi::ecs;
 using namespace wi::scene;
 using namespace wi::graphics;
+using namespace Discrete;
 
 Shader imguiVS;
 Shader imguiPS;
 Texture fontTexture;
 Sampler sampler;
 InputLayout imguiInputLayout;
-PipelineState imguiPSO;
+PipelineState discretePSO;
 
 Example_DiscreteData::~Example_DiscreteData()
 {
@@ -23,19 +24,25 @@ void Example_DiscreteData::Initialize()
     renderer.init(canvas);
     renderer.Load();
 
+    // DiscreteNode node1;
+
+    // GetDataManager().AddNode(node1);
+
     ActivatePath(&renderer);
 }
 
 void Example_DiscreteData::Compose(wi::graphics::CommandList cmd)
 {
+
     Application::Compose(cmd);
+    GetDevice()->BindPipelineState(&discretePSO, cmd);
 }
 
-/**
- * renderPath
+/** [SECTION]
+ * Example_DiscreteDataRenderer
  * **/
 
-void Example_DiscreteDataRenderer::LoadShader()
+void LoadShader()
 {
     PipelineStateDesc desc;
     desc.vs = wi::renderer::GetShader(wi::enums::VSTYPE_VERTEXCOLOR);
@@ -45,7 +52,7 @@ void Example_DiscreteDataRenderer::LoadShader()
     desc.rs = wi::renderer::GetRasterizerState(wi::enums::RSTYPE_DOUBLESIDED);
     desc.bs = wi::renderer::GetBlendState(wi::enums::BSTYPE_TRANSPARENT);
     desc.pt = PrimitiveTopology::LINELIST;
-    wi::graphics::GetDevice()->CreatePipelineState(&desc, &pso);
+    wi::graphics::GetDevice()->CreatePipelineState(&desc, &discretePSO);
 }
 
 void Example_DiscreteDataRenderer::ResizeLayout()
@@ -62,11 +69,6 @@ void Example_DiscreteDataRenderer::Render() const
 
     GraphicsDevice *device = wi::graphics::GetDevice();
     CommandList cmd = device->BeginCommandList();
-
-    for (auto d_node in nodes)
-    {
-        d_node.Render(*this, cmd);
-    }
 
     RenderPath3D::Render();
 }
@@ -104,7 +106,7 @@ void Example_DiscreteDataRenderer::Load()
 
     // Load model.
     // wi::scene::LoadModel("../Content/models/teapot.wiscene");
-    LoadShader();
+
     RenderPath3D::Load();
 }
 
@@ -138,6 +140,11 @@ void Example_DiscreteDataRenderer::Update(float dt)
     // point.size = 0.01f;
     // wi::renderer::DrawPoint(point);
 
+    if (!discretePSO.IsValid())
+    {
+        LoadShader();
+    }
+
     wi::renderer::RenderableLine line_y;
     line_y.end = XMFLOAT3(0, 1, 0);
     wi::renderer::DrawLine(line_y);
@@ -155,10 +162,10 @@ void Example_DiscreteDataRenderer::Update(float dt)
     float rotation = dt;
     if (wi::input::Down(wi::input::KEYBOARD_BUTTON_LEFT))
     {
-        for (auto d_node in nodes)
-        {
-            d_node.Rotate(XMVectorSet(0, rotation, 0, 1));
-        }
+        // for (auto d_node : nodes)
+        // {
+        //     d_node->Rotate(XMVectorSet(0, rotation, 0, 1));
+        // }
     }
     else if (wi::input::Down(wi::input::KEYBOARD_BUTTON_RIGHT))
     {
@@ -177,6 +184,10 @@ void Example_DiscreteDataRenderer::Update(float dt)
 
 void Example_DiscreteDataRenderer::Compose(wi::graphics::CommandList cmd) const
 {
+    // for (auto d_node : GetDataManager().GetNodes())
+    // {
+    //     d_node.Render(*this, cmd);
+    // }
 
     RenderPath3D::Compose(cmd);
 }

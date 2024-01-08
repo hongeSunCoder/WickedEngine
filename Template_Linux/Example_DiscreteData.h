@@ -1,17 +1,14 @@
 #pragma once
 #include "WickedEngine.h"
-#include "Discrete_Data/discrete.h"
+#include "Discrete/discrete.h"
 
 class Example_DiscreteDataRenderer : public wi::RenderPath3D
 {
 
-private:
-    wi::vector<DiscreteNode *> nodes;
-    void LoadShader();
-
 public:
     wi::gui::Label label;
     wi::graphics::PipelineState pso;
+
     void Load() override;
     void Update(float dt) override;
     void ResizeLayout() override;
@@ -23,6 +20,7 @@ class Example_DiscreteData : public wi::Application
 {
     Example_DiscreteDataRenderer renderer;
 
+private:
 public:
     ~Example_DiscreteData() override;
     void Initialize() override;
