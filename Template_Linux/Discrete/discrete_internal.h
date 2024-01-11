@@ -1,5 +1,6 @@
 #pragma once
 #include "../ImGui/imgui_internal.h"
+#include "discrete.h"
 
 //-------
 // [SECTION] forward declarations
@@ -25,6 +26,8 @@ struct DiscreteNode : public wi::scene::TransformComponent
 {
 
     ImGuiViewportP *Viewport;
+    DiVec3 Pos;
+    DiVec3 Size;
 
     ImDrawList *DrawList;
 
@@ -49,4 +52,6 @@ namespace Discrete
 {
     void Initialize();
     void Shutdown();
+
+    void RenderNode();
 } // namespace Discrete

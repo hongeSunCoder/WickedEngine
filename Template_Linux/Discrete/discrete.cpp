@@ -1,8 +1,6 @@
 //----------
 // [SECTION] INCLUDES
 //---------
-
-#include "discrete.h"
 #include "discrete_internal.h"
 
 using namespace wi::graphics;
@@ -76,9 +74,14 @@ void Discrete::Shutdown()
     g.Initialized = false;
 }
 
-// --------
+// -----------------------
 // [SECTION] MAIN CODE
-// ---------
+// ----------------------
+DiscreteNode::DiscreteNode(DiscreteContext *context)
+{
+
+    DrawList->_Data = &GImGui->DrawListSharedData;
+}
 void Discrete::NewFrame()
 {
     DiscreteContext &g = *GDiscrete;
@@ -106,7 +109,7 @@ static void AddDrawListToDrawData(ImVector<ImDrawList *> *out_list, ImDrawList *
 
     out_list->push_back(draw_list);
 }
-// add to background layer
+// add to regular layer
 static void AddNodeToDrawData(DiscreteNode *node)
 {
 
@@ -139,14 +142,6 @@ void Discrete::Render()
         DiscreteRelation *relation = g.Relations[n];
         AddRelationToDrawData(relation);
     }
-}
-
-// current no use
-ImDrawData *Discrete::GetDrawData()
-{
-    DiscreteContext &g = *GDiscrete;
-    ImGuiViewportP *viewport = g.Viewports[0];
-    return viewport->DrawDataP.Valid ? &viewport->DrawDataP : NULL;
 }
 
 // current no use

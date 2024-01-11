@@ -1,19 +1,16 @@
 #pragma once
 #include "WickedEngine.h"
-#include "Discrete/discrete.h"
 
 class Example_DiscreteDataRenderer : public wi::RenderPath3D
 {
+    wi::gui::Label label;
 
 public:
-    wi::gui::Label label;
-    wi::graphics::PipelineState pso;
-
     void Load() override;
     void Update(float dt) override;
     void ResizeLayout() override;
     void Render() const override;
-    void Compose(wi::graphics::CommandList cmd) const override;
+    // void Compose(wi::graphics::CommandList cmd) const override;
 };
 
 class Example_DiscreteData : public wi::Application

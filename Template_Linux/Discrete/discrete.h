@@ -1,7 +1,18 @@
 #pragma once
 #include "WickedEngine.h"
-#include "../ImGui/imgui.h"
-#include "discrete_internal.h"
+
+//--------
+// [SECTION] Forward declarations and basic types
+//------
+//
+struct DiscreteContext;
+
+struct DiVec3
+{
+    float x, y, z;
+    constexpr DiVec3() : x(0.0f), y(0.0f), z(0.0f) {}
+    constexpr DiVec3(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
+};
 
 /**
  *
@@ -19,7 +30,8 @@ namespace Discrete
     void NewFrame();
     void EndFrame();
     void Render();
-    ImDrawData *GetDrawData();
+
+    //
 
     // class DiscreteDataManager
     // {
@@ -51,3 +63,7 @@ namespace Discrete
     // }
 
 } // end namespace Discrete
+
+//-------
+// [SECTION] Helpers  (DiDrawVert)
+//-------
