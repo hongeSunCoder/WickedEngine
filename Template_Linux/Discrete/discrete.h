@@ -1,5 +1,9 @@
 #pragma once
-#include "WickedEngine.h"
+
+//------------------------
+// [SECTION] Header mess
+//-----------------------
+#include <stddef.h> // ptrdiff_t, NULL
 
 //--------
 // [SECTION] Forward declarations and basic types
@@ -31,7 +35,8 @@ namespace Discrete
     void EndFrame();
     void Render();
 
-    //
+    // Nodes
+    void Node(DiVec3 &pos, DiVec3 &size);
 
     // class DiscreteDataManager
     // {

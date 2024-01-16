@@ -38,6 +38,7 @@ DiscreteContext *Discrete::CreateContext()
 {
     DiscreteContext *ctx = IM_NEW(DiscreteContext);
     SetCurrentContext(ctx);
+    Initialize();
     return ctx;
 }
 void Discrete::DestroyContext(DiscreteContext *ctx)
@@ -77,17 +78,23 @@ void Discrete::Shutdown()
 // -----------------------
 // [SECTION] MAIN CODE
 // ----------------------
-DiscreteNode::DiscreteNode(DiscreteContext *context)
+DiscreteNode::DiscreteNode(DiscreteContext *context) : DrawListInst(NULL)
 {
-
+    memset(this, 0, sizeof(*this));
+    DrawList = &DrawListInst;
     DrawList->_Data = &GImGui->DrawListSharedData;
 }
+
 void Discrete::NewFrame()
 {
     DiscreteContext &g = *GDiscrete;
 
     g.FrameCount += 1;
-    UpdateViewportsNewFrame();
+    // UpdateViewportsNewFrame();
+}
+// current no use
+static void Discrete::UpdateViewportsNewFrame()
+{
 }
 
 static void AddDrawListToDrawData(ImVector<ImDrawList *> *out_list, ImDrawList *draw_list)
@@ -144,9 +151,25 @@ void Discrete::Render()
     }
 }
 
-// current no use
-static void Discrete::UpdateViewportsNewFrame()
+static DiscreteNode *CreateNewNode()
 {
+    DiscreteContext &g = *GDiscrete;
+
+    DiscreteNode *node = IM_NEW(DiscreteNode)(&g);
+    g.Nodes.push_back(node);
+    return node;
+}
+void Discrete::Node(DiVec3 &pos, DiVec3 &size)
+{
+    DiscreteNode *node = CreateNewNode();
+    node->Pos = pos;
+    node->Size = size;
+
+    node->DrawList->_ResetForNewFrame();
+
+    // DRAWING
+    ImU32 col = IM_COL32(255, 255, 255, 255);
+    node->DrawList->AddCircleFilled(ImVec2(pos.x, pos.y), size.x, col);
 }
 
 // void DiscreteNode::Render(const wi::Canvas &canvas, CommandList cmd) const

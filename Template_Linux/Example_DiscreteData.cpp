@@ -160,8 +160,8 @@ void Example_DiscreteData::Compose(wi::graphics::CommandList cmd)
 
     Application::Compose(cmd);
     // Rendering
-    ImGui::Render();
     Discrete::Render();
+    ImGui::Render();
 
     auto drawData = ImGui::GetDrawData();
 
@@ -376,7 +376,7 @@ void Example_DiscreteDataRenderer::Load()
     wi::scene::GetCamera().TransformCamera(transform);
 
     // Load model.
-    wi::scene::LoadModel("../Content/models/teapot.wiscene");
+    // wi::scene::LoadModel("../Content/models/teapot.wiscene");
 
     RenderPath3D::Load();
 }
@@ -402,6 +402,11 @@ void Example_DiscreteDataRenderer::Update(float dt)
     ImGui_ImplSDL2_NewFrame();
 #endif
     ImGui::NewFrame();
+    Discrete::NewFrame();
+
+    DiVec3 pos = DiVec3(0, 0, 2);
+    DiVec3 size = DiVec3(3, 3, 3);
+    Discrete::Node(pos, size);
 
     // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
     if (show_demo_window)
@@ -440,27 +445,27 @@ void Example_DiscreteDataRenderer::Update(float dt)
         ImGui::End();
     }
 
-    Scene &scene = wi::scene::GetScene();
-    // teapot_material Base Base_mesh Top Top_mesh editorLight
-    wi::ecs::Entity e_teapot_base = scene.Entity_FindByName("Base");
-    wi::ecs::Entity e_teapot_top = scene.Entity_FindByName("Top");
-    assert(e_teapot_base != wi::ecs::INVALID_ENTITY);
-    assert(e_teapot_top != wi::ecs::INVALID_ENTITY);
-    TransformComponent *transform_base = scene.transforms.GetComponent(e_teapot_base);
-    TransformComponent *transform_top = scene.transforms.GetComponent(e_teapot_top);
-    assert(transform_base != nullptr);
-    assert(transform_top != nullptr);
-    float rotation = dt;
-    if (wi::input::Down(wi::input::KEYBOARD_BUTTON_LEFT))
-    {
-        transform_base->Rotate(XMVectorSet(0, rotation, 0, 1));
-        transform_top->Rotate(XMVectorSet(0, rotation, 0, 1));
-    }
-    else if (wi::input::Down(wi::input::KEYBOARD_BUTTON_RIGHT))
-    {
-        transform_base->Rotate(XMVectorSet(0, -rotation, 0, 1));
-        transform_top->Rotate(XMVectorSet(0, -rotation, 0, 1));
-    }
+    // Scene &scene = wi::scene::GetScene();
+    // // teapot_material Base Base_mesh Top Top_mesh editorLight
+    // wi::ecs::Entity e_teapot_base = scene.Entity_FindByName("Base");
+    // wi::ecs::Entity e_teapot_top = scene.Entity_FindByName("Top");
+    // assert(e_teapot_base != wi::ecs::INVALID_ENTITY);
+    // assert(e_teapot_top != wi::ecs::INVALID_ENTITY);
+    // TransformComponent *transform_base = scene.transforms.GetComponent(e_teapot_base);
+    // TransformComponent *transform_top = scene.transforms.GetComponent(e_teapot_top);
+    // assert(transform_base != nullptr);
+    // assert(transform_top != nullptr);
+    // float rotation = dt;
+    // if (wi::input::Down(wi::input::KEYBOARD_BUTTON_LEFT))
+    // {
+    //     transform_base->Rotate(XMVectorSet(0, rotation, 0, 1));
+    //     transform_top->Rotate(XMVectorSet(0, rotation, 0, 1));
+    // }
+    // else if (wi::input::Down(wi::input::KEYBOARD_BUTTON_RIGHT))
+    // {
+    //     transform_base->Rotate(XMVectorSet(0, -rotation, 0, 1));
+    //     transform_top->Rotate(XMVectorSet(0, -rotation, 0, 1));
+    // }
 
     RenderPath3D::Update(dt);
 

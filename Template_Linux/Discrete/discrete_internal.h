@@ -1,6 +1,7 @@
 #pragma once
 #include "../ImGui/imgui_internal.h"
 #include "discrete.h"
+#include "WickedEngine.h"
 
 //-------
 // [SECTION] forward declarations
@@ -30,6 +31,7 @@ struct DiscreteNode : public wi::scene::TransformComponent
     DiVec3 Size;
 
     ImDrawList *DrawList;
+    ImDrawList DrawListInst;
 
 public:
     DiscreteNode(DiscreteContext *context);
