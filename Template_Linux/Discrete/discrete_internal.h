@@ -16,6 +16,7 @@ struct DiscreteContext
 
     // Nodes state
     ImVector<DiscreteNode *> Nodes;
+    ImGuiStorage NodesById; // map node's ImGuiID to ImGuiWindow*
 
     // Relation state
     ImVector<DiscreteRelation *> Relations;
@@ -25,6 +26,8 @@ struct DiscreteContext
 
 struct DiscreteNode : public wi::scene::TransformComponent
 {
+    char *Name;
+    ImGuiID ID;
 
     ImGuiViewportP *Viewport;
     DiVec3 Pos;
@@ -34,7 +37,7 @@ struct DiscreteNode : public wi::scene::TransformComponent
     ImDrawList DrawListInst;
 
 public:
-    DiscreteNode(DiscreteContext *context);
+    DiscreteNode(DiscreteContext *context, const char *name);
     //  void Render(const wi::Canvas &canvas, wi::graphics::CommandList cmd) const;
 };
 
@@ -52,6 +55,10 @@ public:
 
 namespace Discrete
 {
+
+    DiscreteNode *FindNodeByID(ImGuiID id);
+    DiscreteNode *FindNodeByName(const char *name);
+
     void Initialize();
     void Shutdown();
 

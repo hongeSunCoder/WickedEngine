@@ -37,6 +37,7 @@ namespace Discrete
 
     // Nodes
     void Node(DiVec3 &pos, DiVec3 &size);
+    void Node(const char *name);
 
     // class DiscreteDataManager
     // {

@@ -71,6 +71,7 @@ void Discrete::Shutdown()
     g.Nodes.clear_delete();
     g.Relations.clear_delete();
     g.Viewports.clear_delete();
+    g.NodesById.Clear();
 
     g.Initialized = false;
 }
@@ -78,11 +79,15 @@ void Discrete::Shutdown()
 // -----------------------
 // [SECTION] MAIN CODE
 // ----------------------
-DiscreteNode::DiscreteNode(DiscreteContext *context) : DrawListInst(NULL)
+DiscreteNode::DiscreteNode(DiscreteContext *context, const char *name) : DrawListInst(NULL)
 {
     memset(this, 0, sizeof(*this));
+    Name = ImStrdup(name);
+    ID = ImHashStr(name);
+
     DrawList = &DrawListInst;
     DrawList->_Data = &GImGui->DrawListSharedData;
+    DrawList->_OwnerName = Name;
 }
 
 void Discrete::NewFrame()
@@ -151,17 +156,52 @@ void Discrete::Render()
     }
 }
 
-static DiscreteNode *CreateNewNode()
+static DiscreteNode *CreateNewNode(const char *name)
 {
     DiscreteContext &g = *GDiscrete;
 
-    DiscreteNode *node = IM_NEW(DiscreteNode)(&g);
+    DiscreteNode *node = IM_NEW(DiscreteNode)(&g, name);
+    g.NodesById.SetVoidPtr(node->ID, node);
     g.Nodes.push_back(node);
     return node;
 }
-void Discrete::Node(DiVec3 &pos, DiVec3 &size)
+
+DiscreteNode *Discrete::FindNodeByID(ImGuiID id)
 {
-    DiscreteNode *node = CreateNewNode();
+    DiscreteContext &g = *GDiscrete;
+    return (DiscreteNode *)g.NodesById.GetVoidPtr(id);
+}
+DiscreteNode *Discrete::FindNodeByName(const char *name)
+{
+    ImGuiID id = ImHashStr(name);
+    return FindNodeByID(id);
+}
+
+// void Discrete::Node(DiVec3 &pos, DiVec3 &size)
+// {
+//     DiscreteNode *node = CreateNewNode();
+//     node->Pos = pos;
+//     node->Size = size;
+
+//     node->DrawList->_ResetForNewFrame();
+
+//     // DRAWING
+//     ImU32 col = IM_COL32(255, 255, 255, 255);
+//     node->DrawList->AddCircleFilled(ImVec2(pos.x, pos.y), size.x, col);
+// }
+
+// call once perframe
+void Discrete::Node(const char *name)
+{
+    // ImGuiContext &gImGui = *GImGui;
+
+    DiscreteNode *node = FindNodeByName(name);
+    const bool node_just_created = (node == NULL);
+    if (node_just_created)
+        node = CreateNewNode(name);
+
+    DiVec3 pos = DiVec3(0, 0, 2);
+    DiVec3 size = DiVec3(30, 3, 3);
     node->Pos = pos;
     node->Size = size;
 
@@ -169,6 +209,7 @@ void Discrete::Node(DiVec3 &pos, DiVec3 &size)
 
     // DRAWING
     ImU32 col = IM_COL32(255, 255, 255, 255);
+    // node->DrawList->PushTextureID(gImGui.Font->ContainerAtlas->TexID);
     node->DrawList->AddCircleFilled(ImVec2(pos.x, pos.y), size.x, col);
 }
 

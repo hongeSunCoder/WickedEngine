@@ -160,7 +160,7 @@ void Example_DiscreteData::Compose(wi::graphics::CommandList cmd)
 
     Application::Compose(cmd);
     // Rendering
-    Discrete::Render();
+    // Discrete::Render();
     ImGui::Render();
 
     auto drawData = ImGui::GetDrawData();
@@ -406,7 +406,7 @@ void Example_DiscreteDataRenderer::Update(float dt)
 
     DiVec3 pos = DiVec3(0, 0, 2);
     DiVec3 size = DiVec3(3, 3, 3);
-    Discrete::Node(pos, size);
+    Discrete::Node("pos, size");
 
     // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
     if (show_demo_window)
@@ -474,19 +474,19 @@ void Example_DiscreteDataRenderer::Update(float dt)
     //     LoadShader();
     // }
 
-    // wi::renderer::RenderableLine line_y;
-    // line_y.end = XMFLOAT3(0, 1, 0);
-    // wi::renderer::DrawLine(line_y);
+    wi::renderer::RenderableLine line_y;
+    line_y.end = XMFLOAT3(0, 1, 0);
+    wi::renderer::DrawLine(line_y);
 
-    // wi::renderer::RenderableLine line_x;
-    // line_x.end = XMFLOAT3(1, 0, 0);
-    // wi::renderer::DrawLine(line_x);
+    wi::renderer::RenderableLine line_x;
+    line_x.end = XMFLOAT3(1, 0, 0);
+    wi::renderer::DrawLine(line_x);
 
-    // wi::renderer::RenderableLine line_z;
-    // line_z.end = XMFLOAT3(0, 0, 1);
-    // line_z.color_start = XMFLOAT4(1, 0.5, 1, 1);
-    // line_z.color_end = XMFLOAT4(1, 0.5, 1, 1);
-    // wi::renderer::DrawLine(line_z);
+    wi::renderer::RenderableLine line_z;
+    line_z.end = XMFLOAT3(0, 0, 1);
+    line_z.color_start = XMFLOAT4(1, 0.5, 1, 1);
+    line_z.color_end = XMFLOAT4(1, 0.5, 1, 1);
+    wi::renderer::DrawLine(line_z);
 
     // float rotation = dt;
     // if (wi::input::Down(wi::input::KEYBOARD_BUTTON_LEFT))
